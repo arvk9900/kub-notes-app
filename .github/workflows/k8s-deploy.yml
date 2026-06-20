@@ -1,31 +1,28 @@
 name: Kubernetes Deployment
 
 on:
-push:
-branches:
-- main
+  push:
+    branches:
+      - main
 
 jobs:
+  deploy:
+    runs-on: self-hosted
 
-deploy:
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-runs-on: self-hosted
+      - name: Verify Kubernetes Access
+        run: kubectl get pods
 
-steps:
+      - name: Restart Backend
+        run: kubectl rollout restart deployment notes-backend
 
-  - name: Checkout Code
-    uses: actions/checkout@v4
+      - name: Restart Frontend
+        run: kubectl rollout restart deployment notes-frontend
 
-  - name: Verify Kubernetes Access
-    run: kubectl get pods
-
-  - name: Restart Backend
-    run: kubectl rollout restart deployment notes-backend
-
-  - name: Restart Frontend
-    run: kubectl rollout restart deployment notes-frontend
-
-  - name: Wait For Rollout
-    run: |
-      kubectl rollout status deployment notes-backend
-      kubectl rollout status deployment notes-frontend
+      - name: Wait For Rollout
+        run: |
+          kubectl rollout status deployment notes-backend
+          kubectl rollout status deployment notes-frontend
