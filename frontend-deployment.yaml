@@ -23,7 +23,7 @@ spec:
 
       - name: notes-frontend
 
-        image: notes-frontend:v3
+        image: notes-frontend:v4
         imagePullPolicy: Never
 
         ports:
